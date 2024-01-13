@@ -40,15 +40,16 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public void AddCountries(HashSet<Country> countries)
         {
+            HashSet<Country> countriesFromDb = GetAll().ToHashSet();
             using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
 
                 foreach (var country in countries)
                 {
-                    int existringCountry = GetCountryIdByName(country.Name);
+                    Country existringCountry = countriesFromDb.FirstOrDefault(x => x.Name == country.Name);
 
-                    if (existringCountry != -1)
+                    if (existringCountry != null)
                     {
                         continue;
                     }

@@ -42,30 +42,22 @@ namespace Organizations.DbProvider.Repositories.Implementations
                             (@Index, @Name, @Website, @CountryId, @Description, @Founded, @IndustryId, @NumberOfEmployees);";
                             
                             command.CommandText = query;
-                            IndustryRepository industryRepository = new IndustryRepository();
-                            CountryRepository countryRepository = new CountryRepository();
-                            HashSet<Industry> industries = industryRepository.GetAll().ToHashSet();
-                            HashSet<Country> countryList = countryRepository.GetAll().ToHashSet();
+                            HashSet<DBOrganization> dBOrganization = AssignIdsToOrganizations(organizations);
                             
 
 
-                            foreach (Organization organization in organizations)
+                            foreach (DBOrganization organization in dBOrganization)
                             {
-                                 Country country = countryList.FirstOrDefault(c => c.Name == organization.Country);
-                                 Industry industry = industries.FirstOrDefault(c => c.Name == organization.Industry);
-
-
-                                int countryId = country.CountryId;
-                                int industryId = industry.IndustryId;
+                                 
                                
                                 
                                 command.Parameters.AddWithValue("@Index", organization.Index);
                                 command.Parameters.AddWithValue("@Name", organization.Name);
                                 command.Parameters.AddWithValue("@Website", organization.Website);
-                                command.Parameters.AddWithValue("@CountryId", countryId);
+                                command.Parameters.AddWithValue("@CountryId", organization.CountryId);
                                 command.Parameters.AddWithValue("@Description", organization.Description);
                                 command.Parameters.AddWithValue("@Founded", organization.Founded);
-                                command.Parameters.AddWithValue("@IndustryId", industryId);
+                                command.Parameters.AddWithValue("@IndustryId", organization.IndustryId);
                                 command.Parameters.AddWithValue("@NumberOfEmployees", organization.NumberOfEmployees);
                                 command.ExecuteNonQuery();
                               
@@ -86,6 +78,40 @@ namespace Organizations.DbProvider.Repositories.Implementations
             }
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds);
+        }
+
+
+        public HashSet<DBOrganization> AssignIdsToOrganizations(HashSet<Organization> organizations)
+        {
+            HashSet<DBOrganization> organizationsWithIds = new HashSet<DBOrganization>();
+            IndustryRepository industryRepository = new IndustryRepository();
+            CountryRepository countryRepository = new CountryRepository();
+            HashSet<Industry> industries = industryRepository.GetAll().ToHashSet();
+            HashSet<Country> countries = countryRepository.GetAll().ToHashSet();
+
+
+            foreach (Organization organization in organizations)
+            {
+                Country country = countries.FirstOrDefault(c => c.Name == organization.Country);
+                Industry industry = industries.FirstOrDefault(c => c.Name == organization.Industry);
+
+                int countryId = country?.CountryId ?? 0;
+                int industryId = industry?.IndustryId ?? 0;
+
+                organizationsWithIds.Add(new DBOrganization
+                {
+                    Index = organization.Index,
+                    Name = organization.Name,
+                    Website = organization.Website,
+                    CountryId = countryId,
+                    Description = organization.Description,
+                    Founded = organization.Founded,
+                    IndustryId = industryId,
+                    NumberOfEmployees = organization.NumberOfEmployees
+                });
+            }
+
+            return organizationsWithIds;
         }
     }
 }

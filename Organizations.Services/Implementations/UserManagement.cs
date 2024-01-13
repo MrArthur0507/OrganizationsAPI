@@ -29,7 +29,7 @@ namespace Organizations.Services.Implementations
             byte[] salt = _passwordHasher.GenerateSalt();
 
             byte[] hashedPassword = _passwordHasher.HashPassword(password, salt);
-
+            Console.WriteLine(hashedPassword.ToString());
             Account account = _accountRepository.GetAccountByUsername(username);
 
             if (account == null)
