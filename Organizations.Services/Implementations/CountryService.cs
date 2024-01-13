@@ -1,4 +1,5 @@
-﻿using Organizations.DbProvider.Repositories.Implementations;
+﻿using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Repositories.Implementations;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
 using System;
@@ -11,9 +12,9 @@ namespace Organizations.Services.Implementations
 {
     public class CountryService : ICountryService
     {
-        private readonly CountryRepository _countryRepository;
+        private readonly ICountryRepository _countryRepository;
 
-        public CountryService(CountryRepository countryRepository)
+        public CountryService(ICountryRepository countryRepository)
         {
             _countryRepository = countryRepository;
         }

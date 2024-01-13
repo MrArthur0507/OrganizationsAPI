@@ -23,7 +23,7 @@ namespace Organizations.DbProvider.Services.Implementations
 
         public void LoadDb()
         {
-            if (File.Exists(dbName))
+            if (File.Exists("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 _logger.Log("Db exists");
             } else

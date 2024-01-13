@@ -12,7 +12,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
     {
         public IEnumerable<T> GetAll()
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 string tableName = typeof(T).Name;
@@ -39,7 +39,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public T GetById(string id)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 string tableName = typeof(T).Name;

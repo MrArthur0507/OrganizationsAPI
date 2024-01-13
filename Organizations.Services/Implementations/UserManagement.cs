@@ -23,7 +23,7 @@ namespace Organizations.Services.Implementations
             _accountRepository = accountRepository;
         }
 
-        public void RegisterUser(string username, string password)
+        public string RegisterUser(string username, string password)
         {
             
             byte[] salt = _passwordHasher.GenerateSalt();
@@ -35,9 +35,9 @@ namespace Organizations.Services.Implementations
             if (account == null)
             {
                 _accountRepository.AddAccount(new Account() { Username = username, AccountId = 1, Salt = salt, HashedPassword = hashedPassword });
-                return;
+                return "Registered successfuly!";
             }
-            Console.WriteLine("already exist");
+            return "Username taken";
 
         }
 

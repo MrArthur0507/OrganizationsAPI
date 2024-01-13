@@ -13,7 +13,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
     {
         public void AddFile(FilePath file)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
 

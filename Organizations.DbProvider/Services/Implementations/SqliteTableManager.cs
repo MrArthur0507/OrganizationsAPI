@@ -27,7 +27,7 @@ namespace Organizations.DbProvider.Services.Implementations
             PropertyInfo[] properties = _tableCreationConfig.GetType().GetProperties();
             foreach (var property in properties)
             {
-                using (SqliteConnection connection = new SqliteConnection($"Data Source = {dbPath}"))
+                using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
                 {
                     connection.Open();
                     using (SqliteCommand command = connection.CreateCommand())

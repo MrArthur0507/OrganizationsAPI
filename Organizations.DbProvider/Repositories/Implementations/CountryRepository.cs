@@ -14,7 +14,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
     {
         public int AddCountry(Country country)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 int existringCountry = GetCountryIdByName(country.Name);
@@ -32,6 +32,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
                         command.Parameters.AddWithValue("@Name", country.Name);
                         command.ExecuteNonQuery();
                         return GetCountryIdByName(country.Name);
+                        
                     }
                 }
             }
@@ -39,7 +40,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public void AddCountries(HashSet<Country> countries)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
 
@@ -68,8 +69,9 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public int GetCountryIdByName(string name)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
+                connection.Open();
                 string query = "SELECT CountryId FROM Country WHERE Name = @Name;";
                 using (SqliteCommand command = connection.CreateCommand())
                 {

@@ -8,7 +8,7 @@ namespace Organizations.Services.Interfaces
 {
     public interface IAccountService
     {
-        public void RegisterUser(string username, string password);
+        public string RegisterUser(string username, string password);
 
         public string LoginUser(string username, string password);
     }

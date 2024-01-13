@@ -18,9 +18,9 @@ namespace Organizations.Services.Implementations
             _jwtGenerator = jwtGenerator;   
         }
 
-        public void RegisterUser(string username, string password)
+        public string RegisterUser(string username, string password)
         {
-            _userManagement.RegisterUser(username, password);
+            return _userManagement.RegisterUser(username, password);
         }
 
         public string LoginUser(string username, string password)

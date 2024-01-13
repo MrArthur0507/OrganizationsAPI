@@ -25,7 +25,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
         public void AddOrganizations(HashSet<Organization> organizations)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction())

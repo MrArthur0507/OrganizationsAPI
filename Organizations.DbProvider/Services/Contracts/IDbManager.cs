@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Services.Contracts
 {
-    internal interface IDbManager
+    public interface IDbManager
     {
     }
 }

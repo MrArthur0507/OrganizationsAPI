@@ -8,7 +8,7 @@ namespace Organizations.Services.Interfaces
 {
     public interface IUserManagement
     {
-        public void RegisterUser(string username, string password);
+        public string RegisterUser(string username, string password);
 
         public bool LoginUser(string username, string password);
 

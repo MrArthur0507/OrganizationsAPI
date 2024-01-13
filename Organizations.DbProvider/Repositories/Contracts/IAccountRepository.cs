@@ -9,7 +9,7 @@ namespace Organizations.DbProvider.Repositories.Contracts
 {
     public interface IAccountRepository : IGenericRepository<Account>
     {
-        public void AddAccount(Account account);
+        public bool AddAccount(Account account);
 
         public Account GetAccountByUsername(string username);
     }

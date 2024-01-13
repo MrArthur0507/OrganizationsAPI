@@ -13,7 +13,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
     {
         public int AddIndustry(Industry industry)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source=mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 int existingIndustry = GetIndustryIdByName(industry.Name, connection);
@@ -39,7 +39,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public void AddIndustries(HashSet<Industry> industries)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source=mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
                 foreach (var industry in industries)

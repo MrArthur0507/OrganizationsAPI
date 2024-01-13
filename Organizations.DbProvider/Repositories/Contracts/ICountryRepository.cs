@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Repositories.Contracts
 {
-    public interface ICountryRepository
+    public interface ICountryRepository : IGenericRepository<Country>
     {
         public int GetCountryIdByName(string name);
 

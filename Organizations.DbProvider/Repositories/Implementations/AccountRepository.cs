@@ -4,6 +4,7 @@ using Organizations.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,30 +12,36 @@ namespace Organizations.DbProvider.Repositories.Implementations
 {
     public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
-        public void AddAccount(Account account)
+        public bool AddAccount(Account account)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            Account accountFromDb = GetAccountByUsername(account.Username);
+            if (accountFromDb == null)
             {
-                connection.Open();
-
-                using (SqliteCommand command = connection.CreateCommand())
+                using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
                 {
-                    command.CommandText = "INSERT INTO Account (Username, Salt, HashedPassword) VALUES (@Username, @Salt, @HashedPassword)";
-                    command.Parameters.AddWithValue("@Username", account.Username);
-                    command.Parameters.AddWithValue("@Salt", account.Salt);
-                    command.Parameters.AddWithValue("@HashedPassword", account.HashedPassword);
+                    connection.Open();
 
-                    command.ExecuteNonQuery();
+                    using (SqliteCommand command = connection.CreateCommand())
+                    {
+                        command.CommandText = "INSERT INTO Account (Username, Salt, HashedPassword) VALUES (@Username, @Salt, @HashedPassword)";
+                        command.Parameters.AddWithValue("@Username", account.Username);
+                        command.Parameters.AddWithValue("@Salt", account.Salt);
+                        command.Parameters.AddWithValue("@HashedPassword", account.HashedPassword);
+
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+
+                    connection.Close();
                 }
-
-                connection.Close();
             }
+            return false;
         }
 
 
         public Account GetAccountByUsername(string username)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = mydb.db"))
+            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
             {
                 connection.Open();
 
