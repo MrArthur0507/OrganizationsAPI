@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Repositories.Contracts
 {
-    public interface IOrganizationRepository
+    public interface IOrganizationRepository : IGenericRepository<Organization>
     {
         public void AddOrganizations(HashSet<Organization> organizations);
     }

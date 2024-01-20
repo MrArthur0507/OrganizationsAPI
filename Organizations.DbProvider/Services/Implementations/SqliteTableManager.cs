@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using Organizations.DbProvider.Base;
 using Organizations.DbProvider.Config.Contracts;
 using Organizations.DbProvider.Services.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +12,10 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Services.Implementations
 {
-    public class SqliteTableManager : ITableManager
+    public class SqliteTableManager : BaseDbComponent, ITableManager
     {
         private readonly IConfigLoader _configLoader;
         private readonly ITableCreationConfig _tableCreationConfig;
-
         public SqliteTableManager(IConfigLoader configLoader)
         {
             _configLoader = configLoader;
@@ -27,7 +28,7 @@ namespace Organizations.DbProvider.Services.Implementations
             PropertyInfo[] properties = _tableCreationConfig.GetType().GetProperties();
             foreach (var property in properties)
             {
-                using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+                using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
                 {
                     connection.Open();
                     using (SqliteCommand command = connection.CreateCommand())

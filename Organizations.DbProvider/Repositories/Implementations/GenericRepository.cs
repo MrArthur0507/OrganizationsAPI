@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
+using Organizations.DbProvider.Base;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Repositories.Implementations
 {
-    public class GenericRepository<T> : IGenericRepository<T>
+    public class GenericRepository<T> : BaseDbComponent, IGenericRepository<T>
     {
+
         public IEnumerable<T> GetAll()
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 string tableName = typeof(T).Name;
@@ -39,7 +42,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public T GetById(string id)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 string tableName = typeof(T).Name;
@@ -61,12 +64,35 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
             }
         }
-
-
-
-
-        private T MapDataReaderToEntity(SqliteDataReader reader)
+        public bool DeleteById(string id)
         {
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
+            {
+                connection.Open();
+                string tableName = typeof(T).Name;
+                string query = $"UPDATE {tableName} SET IsDeleted = 1 WHERE {tableName}Id = @Id;";
+
+                using (SqliteCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = query;
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    try
+                    {
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+
+            private T MapDataReaderToEntity(SqliteDataReader reader)
+            {
             T entity = Activator.CreateInstance<T>();
 
             for (int i = 0; i < reader.FieldCount; i++)

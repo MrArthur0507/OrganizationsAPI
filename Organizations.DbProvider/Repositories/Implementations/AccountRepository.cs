@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using Organizations.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,13 @@ namespace Organizations.DbProvider.Repositories.Implementations
 {
     public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
+
         public bool AddAccount(Account account)
         {
             Account accountFromDb = GetAccountByUsername(account.Username);
             if (accountFromDb == null)
             {
-                using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+                using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
                 {
                     connection.Open();
 
@@ -29,10 +31,11 @@ namespace Organizations.DbProvider.Repositories.Implementations
                         command.Parameters.AddWithValue("@HashedPassword", account.HashedPassword);
 
                         command.ExecuteNonQuery();
+                        connection.Close();
                         return true;
                     }
 
-                    connection.Close();
+                    
                 }
             }
             return false;
@@ -41,7 +44,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public Account GetAccountByUsername(string username)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
 

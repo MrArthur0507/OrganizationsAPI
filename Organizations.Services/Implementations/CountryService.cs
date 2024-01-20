@@ -1,4 +1,5 @@
-﻿using Organizations.DbProvider.Repositories.Contracts;
+﻿using Newtonsoft.Json;
+using Organizations.DbProvider.Repositories.Contracts;
 using Organizations.DbProvider.Repositories.Implementations;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
@@ -17,6 +18,12 @@ namespace Organizations.Services.Implementations
         public CountryService(ICountryRepository countryRepository)
         {
             _countryRepository = countryRepository;
+        }
+
+        public string GetAll()
+        {
+            List<Country> countries = _countryRepository.GetAll().ToList();
+            return JsonConvert.SerializeObject(countries);
         }
 
         public int AddCountry(Country country)
@@ -54,6 +61,16 @@ namespace Organizations.Services.Implementations
         public Country GetCountryById(string countryId)
         {
             return _countryRepository.GetById(countryId);
+        }
+
+        public bool Delete(string countryId)
+        {
+            Country country = GetCountryById(countryId);
+            if (country != null)
+            {
+                return _countryRepository.DeleteById(countryId);
+            }
+            return false;
         }
     }
 }

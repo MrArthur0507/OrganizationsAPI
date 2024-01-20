@@ -18,6 +18,15 @@ namespace Organizations.API.Controllers
             _countryService = countryService;
         }
 
+
+        [HttpGet]
+        [Route("getAll")]
+        public ActionResult<string> GetAll()
+        {
+            return _countryService.GetAll();
+        }
+
+
         [HttpPost]
         [Route("addCountry")]
         public ActionResult<int> AddCountry([FromBody] Country country)
@@ -51,6 +60,21 @@ namespace Organizations.API.Controllers
             if (country != null)
             {
                 return Ok(country);
+            }
+            else
+            {
+                return NotFound("Country not found");
+            }
+        }
+
+        [HttpDelete]
+        [Route("deleteCountry")]
+        public ActionResult DeleteCountry(string id)
+        {
+            bool success = _countryService.Delete(id);
+            if (success)
+            {
+                return NoContent(); 
             }
             else
             {

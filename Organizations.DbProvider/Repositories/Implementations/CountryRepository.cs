@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using Organizations.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,10 @@ namespace Organizations.DbProvider.Repositories.Implementations
 {
     public class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
+
         public int AddCountry(Country country)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 int existringCountry = GetCountryIdByName(country.Name);
@@ -24,8 +26,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
             } else
             {
                 string query = "INSERT INTO Country (Name) VALUES (@Name);";
-                
-                    
+
                     using (SqliteCommand command = connection.CreateCommand())
                     {
                         command.CommandText = query;
@@ -41,7 +42,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
         public void AddCountries(HashSet<Country> countries)
         {
             HashSet<Country> countriesFromDb = GetAll().ToHashSet();
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
 
@@ -70,7 +71,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
 
         public int GetCountryIdByName(string name)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 string query = "SELECT CountryId FROM Country WHERE Name = @Name;";
@@ -87,12 +88,12 @@ namespace Organizations.DbProvider.Repositories.Implementations
                     }
                     else
                     {
-
                         return -1;
                     }
                 }
             }
-
         }
+
+        
     }
 }

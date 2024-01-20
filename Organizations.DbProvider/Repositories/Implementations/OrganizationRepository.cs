@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using Organizations.Models.Models;
 using System;
 using System.Collections;
@@ -11,21 +12,19 @@ using System.Threading.Tasks;
 
 namespace Organizations.DbProvider.Repositories.Implementations
 {
-    public class OrganizationRepository : IOrganizationRepository
+    public class OrganizationRepository : GenericRepository<Organization>, IOrganizationRepository
     {
-        private readonly ICountryRepository countryRepository;
-        private readonly IIndustryRepostiory industryRepository;
-
+        private readonly ICountryRepository _countryRepository;
+        private readonly IIndustryRepostiory _industryRepository;
         public OrganizationRepository(ICountryRepository countryRepository, IIndustryRepostiory industryRepository)
         {
-            this.countryRepository = countryRepository ?? throw new ArgumentNullException(nameof(countryRepository));
-            this.industryRepository = industryRepository ?? throw new ArgumentNullException(nameof(industryRepository));
+            _countryRepository = countryRepository;
+            _industryRepository = industryRepository;
         }
 
         public void AddOrganizations(HashSet<Organization> organizations)
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction())
@@ -34,7 +33,6 @@ namespace Organizations.DbProvider.Repositories.Implementations
                     {
                         using (SqliteCommand command = connection.CreateCommand())
                         {
-                            int counter = 0;
                             string query = @"
                             INSERT INTO Organization 
                             ([Index], Name, Website, CountryId, Description, Founded, IndustryId, NumberOfEmployees) 
@@ -43,14 +41,10 @@ namespace Organizations.DbProvider.Repositories.Implementations
                             
                             command.CommandText = query;
                             HashSet<DBOrganization> dBOrganization = AssignIdsToOrganizations(organizations);
-                            
-
 
                             foreach (DBOrganization organization in dBOrganization)
                             {
-                                 
-                               
-                                
+
                                 command.Parameters.AddWithValue("@Index", organization.Index);
                                 command.Parameters.AddWithValue("@Name", organization.Name);
                                 command.Parameters.AddWithValue("@Website", organization.Website);
@@ -76,27 +70,22 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
                 
             }
-            sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
         }
 
 
         public HashSet<DBOrganization> AssignIdsToOrganizations(HashSet<Organization> organizations)
         {
-            HashSet<DBOrganization> organizationsWithIds = new HashSet<DBOrganization>();
-            IndustryRepository industryRepository = new IndustryRepository();
-            CountryRepository countryRepository = new CountryRepository();
-            HashSet<Industry> industries = industryRepository.GetAll().ToHashSet();
-            HashSet<Country> countries = countryRepository.GetAll().ToHashSet();
-
+            HashSet<DBOrganization> organizationsWithIds = new HashSet<DBOrganization>();      
+            HashSet<Industry> industries = _industryRepository.GetAll().ToHashSet();
+            HashSet<Country> countries = _countryRepository.GetAll().ToHashSet();
 
             foreach (Organization organization in organizations)
             {
                 Country country = countries.FirstOrDefault(c => c.Name == organization.Country);
                 Industry industry = industries.FirstOrDefault(c => c.Name == organization.Industry);
 
-                int countryId = country?.CountryId ?? 0;
-                int industryId = industry?.IndustryId ?? 0;
+                int countryId = country.CountryId;
+                int industryId = industry.IndustryId;
 
                 organizationsWithIds.Add(new DBOrganization
                 {

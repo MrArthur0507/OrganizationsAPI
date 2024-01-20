@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using Organizations.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
     {
         public void AddFile(FilePath file)
         {
-            using (SqliteConnection connection = new SqliteConnection("Data Source = C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db;"))
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
 

@@ -9,10 +9,13 @@ namespace Organizations.Services.Interfaces
 {
     public interface ICountryService
     {
+        public string GetAll();
         public int AddCountry(Country country);
 
         public int GetCountryIdByName(string name);
 
         public Country GetCountryById(string countryId);
+
+        public bool Delete(string countryId);
     }
 }

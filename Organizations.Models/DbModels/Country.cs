@@ -11,5 +11,7 @@ namespace Organizations.Models.Models
         public int CountryId { get; set; }
 
         public string Name { get; set; }
+
+        public int IsDeleted { get; set; }
     }
 }

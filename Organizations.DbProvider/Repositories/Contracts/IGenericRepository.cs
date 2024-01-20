@@ -10,5 +10,6 @@ namespace Organizations.DbProvider.Repositories.Contracts
     {
         IEnumerable<T> GetAll();
         T GetById(string id);
+        public bool DeleteById(string id);
     }
 }
