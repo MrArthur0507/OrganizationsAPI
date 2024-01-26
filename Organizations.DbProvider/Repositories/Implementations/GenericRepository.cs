@@ -12,14 +12,13 @@ namespace Organizations.DbProvider.Repositories.Implementations
 {
     public class GenericRepository<T> : BaseDbComponent, IGenericRepository<T>
     {
-
         public IEnumerable<T> GetAll()
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
                 connection.Open();
                 string tableName = typeof(T).Name;
-                string query = $"SELECT * FROM {tableName};";
+                string query = $"SELECT * FROM {tableName} WHERE IsDeleted = 0;"; 
 
                 using (SqliteCommand command = connection.CreateCommand())
                 {
@@ -36,7 +35,6 @@ namespace Organizations.DbProvider.Repositories.Implementations
                         return entities;
                     }
                 }
-
             }
         }
 
@@ -46,7 +44,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
             {
                 connection.Open();
                 string tableName = typeof(T).Name;
-                string query = $"SELECT * FROM {tableName} WHERE {tableName}Id = @Id;";
+                string query = $"SELECT * FROM {tableName} WHERE {tableName}Id = @Id AND IsDeleted = 0;"; 
 
                 using (SqliteCommand command = connection.CreateCommand())
                 {
@@ -64,7 +62,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
             }
         }
-        public bool DeleteById(string id)
+        public virtual bool DeleteById(string id)
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
@@ -89,7 +87,6 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
             }
         }
-
 
             private T MapDataReaderToEntity(SqliteDataReader reader)
             {

@@ -1,3 +1,4 @@
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Organizations.API.Mapper;
 using Organizations.DbProvider.Repositories.Contracts;
@@ -5,6 +6,7 @@ using Organizations.DbProvider.Repositories.Implementations;
 using Organizations.Models.Models;
 using Organizations.Services.Implementations;
 using Organizations.Services.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,22 @@ builder.Services.AddScoped<IUserManagement, UserManagement>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 //
+
+//jwt bearer
+builder.Services.AddAuthentication().AddJwtBearer(
+    options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5Nzg2OTYyMCwiaWF0IjoxNjk3ODY5NjIwfQ.yE7D6Lj12wX7qUYNTXVYqJhMdPsU7TA9C8WVG4mCCY4"))
+        };
+    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -69,6 +69,41 @@ namespace Organizations.DbProvider.Repositories.Implementations
             }
         }
 
+        public override bool DeleteById(string id)
+        {
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
+            {
+                connection.Open();
+
+                string countryQuery = $"UPDATE Country SET IsDeleted = 1 WHERE CountryId = @Id;";
+
+                string organizationQuery = $"UPDATE Organization SET IsDeleted = 1 WHERE CountryId = @Id;";
+                try
+                {
+                    using (SqliteCommand countryCommand = connection.CreateCommand())
+                    {
+                        countryCommand.CommandText = countryQuery;
+                        countryCommand.Parameters.AddWithValue("@Id", id);
+                        int countryRowsAffected = countryCommand.ExecuteNonQuery();
+                    }
+
+                    using (SqliteCommand organizationCommand = connection.CreateCommand())
+                    {
+                        organizationCommand.CommandText = organizationQuery;
+                        organizationCommand.Parameters.AddWithValue("@Id", id);
+                        int organizationRowsAffected = organizationCommand.ExecuteNonQuery();
+                    }
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+
+            }
+        }
+
         public int GetCountryIdByName(string name)
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))

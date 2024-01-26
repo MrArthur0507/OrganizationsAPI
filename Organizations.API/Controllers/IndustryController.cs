@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
@@ -60,7 +61,7 @@ namespace Organizations.API.Controllers
                 return NotFound("Industry not found");
             }
         }
-
+        [Authorize]
         [HttpDelete]
         [Route("deleteIndustry")]
         public ActionResult DeleteIndustry(string id)

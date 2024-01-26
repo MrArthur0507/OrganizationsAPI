@@ -12,25 +12,26 @@ namespace Organizations.Services.Implementations
 {
     public class JwtGenerator : IJwtGenerator
     {
-        private readonly string secretKey = "+drMBlyqcyBSNsa3+5k1l6ABUhZDMHruCLJvDroZbPwvdr89pyPBphW35uvM5Zu5KHt2IXqXDHRvW+rSY8hk/Q=="; 
+        private readonly string secretKey = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5Nzg2OTYyMCwiaWF0IjoxNjk3ODY5NjIwfQ.yE7D6Lj12wX7qUYNTXVYqJhMdPsU7TA9C8WVG4mCCY4"; 
 
         public string GenerateToken(string username)
         {
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, username)
-        };
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.Name, username),
+            };
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5) 
-               
+                expires: DateTime.UtcNow.AddMinutes(1),
+                signingCredentials: signingCredentials
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenString;
         }
     }
 }
