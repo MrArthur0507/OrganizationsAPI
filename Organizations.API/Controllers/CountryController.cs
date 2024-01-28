@@ -67,6 +67,21 @@ namespace Organizations.API.Controllers
                 return NotFound("Country not found");
             }
         }
+
+        [HttpPut]
+        [Route("updateCountry")]
+        public IActionResult UpdateCountry([FromQuery]Country country)
+        {
+            bool result = _countryService.UpdateCountry(country);
+            if (result)
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest();
+            }
+        }
+
         [Authorize("AdminPolicy")]
         [HttpDelete]
         [Route("deleteCountry")]

@@ -44,7 +44,16 @@ namespace Organizations.Services.Implementations
 
         public bool UpdateIndustry(Industry industry)
         {
-            return _industryRepository.UpdateIndustry(industry);
+            bool result;
+            if (GetIndustryIdByName(industry.Name) == -1)
+            {
+                result = _industryRepository.UpdateIndustry(industry);
+            } else
+            {
+                return false;
+            }
+            return result;
+            
         }
         public void AddIndustries(HashSet<Industry> industries)
         {

@@ -16,6 +16,7 @@ namespace Organizations.Services.Interfaces
 
         public Country GetCountryById(string countryId);
 
+        public bool UpdateCountry(Country country);
         public bool Delete(string countryId);
     }
 }

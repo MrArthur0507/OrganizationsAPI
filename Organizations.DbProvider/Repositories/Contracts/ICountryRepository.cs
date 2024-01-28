@@ -14,6 +14,7 @@ namespace Organizations.DbProvider.Repositories.Contracts
 
         public int AddCountry(Country country);
 
+        public bool UpdateCountry(Country country);
         public void AddCountries(HashSet<Country> countries);
     }
 }

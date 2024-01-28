@@ -69,6 +69,35 @@ namespace Organizations.DbProvider.Repositories.Implementations
             }
         }
 
+        public bool UpdateCountry(Country country)
+        {
+            try
+            {
+                using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
+                {
+                    connection.Open();
+                    string query = "UPDATE Country SET Name = @Name WHERE CountryId = @CountryId;";
+
+                    using (SqliteCommand command = connection.CreateCommand())
+                    {
+                        command.CommandText = query;
+                        command.Parameters.AddWithValue("@CountryId", country.CountryId);
+                        command.Parameters.AddWithValue("@Name", country.Name);
+                        int changedRows = command.ExecuteNonQuery();
+                        if (changedRows > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return false;
+        }
+
         public override bool DeleteById(string id)
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))

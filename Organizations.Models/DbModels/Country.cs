@@ -12,6 +12,5 @@ namespace Organizations.Models.Models
 
         public string Name { get; set; }
 
-        public int IsDeleted { get; set; }
     }
 }

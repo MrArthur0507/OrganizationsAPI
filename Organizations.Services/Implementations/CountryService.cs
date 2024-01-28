@@ -53,6 +53,18 @@ namespace Organizations.Services.Implementations
             }
         }
 
+        public bool UpdateCountry(Country country)
+        {
+            bool result;
+            if (GetCountryIdByName(country.Name) == -1)
+            {
+                result = _countryRepository.UpdateCountry(country);
+            } else
+            {
+                return false;
+            }
+            return result;
+        }
         public int GetCountryIdByName(string name)
         {
             return _countryRepository.GetCountryIdByName(name);
