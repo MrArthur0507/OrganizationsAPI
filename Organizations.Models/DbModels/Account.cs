@@ -15,5 +15,7 @@ namespace Organizations.Models.Models
         public byte[] Salt { get; set; }
 
         public byte[] HashedPassword { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

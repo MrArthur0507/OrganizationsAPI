@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Organizations.Services.Interfaces
+namespace Organizations.Models.DTO
 {
-    public interface IJwtGenerator
+    public class LoginResult
     {
-        public string GenerateToken(Account account);
+        public bool status { get; set; }
+
+        public Account Account { get; set; }
     }
 }

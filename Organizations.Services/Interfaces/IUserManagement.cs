@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Organizations.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Organizations.Services.Interfaces
     {
         public string RegisterUser(string username, string password);
 
-        public bool LoginUser(string username, string password);
+        public LoginResult LoginUser(string username, string password);
 
     }
 }

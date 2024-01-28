@@ -61,7 +61,7 @@ namespace Organizations.API.Controllers
                 return NotFound("Industry not found");
             }
         }
-        [Authorize]
+        [Authorize("AdminPolicy")]
         [HttpDelete]
         [Route("deleteIndustry")]
         public ActionResult DeleteIndustry(string id)

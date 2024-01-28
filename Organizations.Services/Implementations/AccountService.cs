@@ -1,4 +1,5 @@
-﻿using Organizations.Services.Interfaces;
+﻿using Organizations.Models.DTO;
+using Organizations.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,10 @@ namespace Organizations.Services.Implementations
 
         public string LoginUser(string username, string password)
         {
-            if (_userManagement.LoginUser(username, password))
+            LoginResult lg = _userManagement.LoginUser(username, password);
+            if (lg.status)
             {
-                string jwt = _jwtGenerator.GenerateToken(username);
+                string jwt = _jwtGenerator.GenerateToken(lg.Account);
                 return jwt;
             }
             return null;

@@ -1,4 +1,5 @@
 ﻿using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.Models.DTO;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
 using System;
@@ -41,19 +42,23 @@ namespace Organizations.Services.Implementations
 
         }
 
-        public bool LoginUser(string username, string password)
+        public LoginResult LoginUser(string username, string password)
         {
             Account account = _accountRepository.GetAccountByUsername(username);
             if (account != null)
             {
-                
                 byte[] hashedPassword = _passwordHasher.HashPassword(password, account.Salt);
-
-               
-                return _passwordHasher.CompareByteArrays(hashedPassword, account.HashedPassword);
+                if (_passwordHasher.CompareByteArrays(hashedPassword, account.HashedPassword))
+                {
+                    return new LoginResult()
+                    {
+                        status = true,
+                        Account = account,
+                    };
+                }
             }
 
-            return false;
+            return new LoginResult();
         }
     }
 }

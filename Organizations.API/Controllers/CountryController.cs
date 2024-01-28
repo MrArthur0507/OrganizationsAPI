@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
@@ -66,7 +67,7 @@ namespace Organizations.API.Controllers
                 return NotFound("Country not found");
             }
         }
-
+        [Authorize("AdminPolicy")]
         [HttpDelete]
         [Route("deleteCountry")]
         public ActionResult DeleteCountry(string id)

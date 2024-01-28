@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Organizations.API.Mapper;
+using Organizations.API.Middlewares;
 using Organizations.DbProvider.Queries.Contracts;
 using Organizations.DbProvider.Queries.Implementations;
 using Organizations.DbProvider.Repositories.Contracts;
@@ -75,6 +76,14 @@ builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 //
 
 //jwt bearer
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Admin");
+    });
+});
 builder.Services.AddAuthentication().AddJwtBearer(
     options =>
     {
@@ -86,6 +95,7 @@ builder.Services.AddAuthentication().AddJwtBearer(
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5Nzg2OTYyMCwiaWF0IjoxNjk3ODY5NjIwfQ.yE7D6Lj12wX7qUYNTXVYqJhMdPsU7TA9C8WVG4mCCY4"))
         };
+        
     });
 
 
@@ -105,3 +115,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+app.UseMiddleware<CustomHeaderMiddleware>();

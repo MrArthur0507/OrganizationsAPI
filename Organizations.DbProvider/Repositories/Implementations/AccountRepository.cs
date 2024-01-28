@@ -62,7 +62,8 @@ namespace Organizations.DbProvider.Repositories.Implementations
                                 AccountId = reader.GetInt32(reader.GetOrdinal("AccountId")),
                                 Username = reader.GetString(reader.GetOrdinal("Username")),
                                 Salt = (byte[])reader["Salt"],
-                                HashedPassword = (byte[])reader["HashedPassword"]
+                                HashedPassword = (byte[])reader["HashedPassword"],
+                                IsAdmin = reader.GetBoolean(reader.GetOrdinal("IsAdmin")),
                             };
                         }
                     }
