@@ -73,6 +73,56 @@ namespace Organizations.DbProvider.Repositories.Implementations
             }
         }
 
+        public bool UpdateOrganization(Organization organization)
+        {
+            using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
+            {
+                connection.Open();
+
+                using (SqliteCommand command = connection.CreateCommand())
+                {
+                    try
+                    {
+                        string query = @"
+                        UPDATE Organization 
+                        SET 
+                        [Index] = @Index,
+                        Name = @Name,
+                        Website = @Website,
+                        CountryId = @CountryId,
+                        Description = @Description,
+                        Founded = @Founded,
+                        IndustryId = @IndustryId,
+                        NumberOfEmployees = @NumberOfEmployees
+                        WHERE OrganizationId = @OrganizationId;";
+
+                        command.CommandText = query;
+
+                        command.Parameters.AddWithValue("@OrganizationId", organization.OrganizationId);
+                        command.Parameters.AddWithValue("@Index", organization.Index);
+                        command.Parameters.AddWithValue("@Name", organization.Name);
+                        command.Parameters.AddWithValue("@Website", organization.Website);
+                        command.Parameters.AddWithValue("@CountryId", organization.CountryId);
+                        command.Parameters.AddWithValue("@Description", organization.Description);
+                        command.Parameters.AddWithValue("@Founded", organization.Founded);
+                        command.Parameters.AddWithValue("@IndustryId", organization.IndustryId);
+                        command.Parameters.AddWithValue("@NumberOfEmployees", organization.NumberOfEmployees);
+
+                        int rowsChanged = command.ExecuteNonQuery();
+                        if (rowsChanged > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
 
         public HashSet<Organization> AssignIdsToOrganizations(HashSet<OrganizationDTO> organizations)
         {

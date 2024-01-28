@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Organizations.Models.DTO;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
+using System.Net;
 
 namespace Organizations.API.Controllers
 {
@@ -37,6 +40,34 @@ namespace Organizations.API.Controllers
                 return NotFound();
             }
 
+        }
+        [Authorize("AdminPolicy")]
+        [HttpPut]
+        [Route("updateOrganization")]
+        public IActionResult UpdateOrganization([FromQuery]Organization organization)
+        {
+            bool isSuccess = _organizationService.UpdateOrganization(organization);
+            if (isSuccess)
+            {
+                return Ok();
+            } else
+            {
+                return NotFound();
+            }
+        }
+        [Authorize("AdminPolicy")]
+        [HttpDelete]
+        [Route("deleteOrganization")]
+        public IActionResult DeleteOrganization(string id)
+        {
+            bool isSuccess = _organizationService.Delete(id);
+            if (isSuccess)
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest();
+            }
         }
     }
 }

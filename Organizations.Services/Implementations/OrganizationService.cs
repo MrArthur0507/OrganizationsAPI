@@ -49,6 +49,11 @@ namespace Organizations.Services.Implementations
             
         }
 
+        public bool UpdateOrganization(Organization organization)
+        {
+            return _organizationRepository.UpdateOrganization(organization);
+        }
+
         public bool Delete(string organizationId)
         {
             return _organizationRepository.DeleteById(organizationId);

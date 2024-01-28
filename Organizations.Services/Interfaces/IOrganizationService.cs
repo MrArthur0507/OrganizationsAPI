@@ -14,6 +14,7 @@ namespace Organizations.Services.Interfaces
 
         public OrganizationResponse GetOrganizationById(string Organizationid);
 
+        public bool UpdateOrganization(Organization organization);
         public bool Delete(string OrganizationId);
     }
 }

@@ -11,5 +11,7 @@ namespace Organizations.DbProvider.Repositories.Contracts
     public interface IOrganizationRepository : IGenericRepository<Organization>
     {
         public void AddOrganizations(HashSet<OrganizationDTO> organizations);
+
+        public bool UpdateOrganization(Organization organization);
     }
 }
