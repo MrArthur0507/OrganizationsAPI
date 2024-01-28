@@ -112,8 +112,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseMiddleware<CustomHeaderMiddleware>();
+
 app.MapControllers();
 
 app.Run();
 
-app.UseMiddleware<CustomHeaderMiddleware>();
+
