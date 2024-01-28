@@ -1,11 +1,15 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Organizations.API.Mapper;
+using Organizations.DbProvider.Queries.Contracts;
+using Organizations.DbProvider.Queries.Implementations;
 using Organizations.DbProvider.Repositories.Contracts;
 using Organizations.DbProvider.Repositories.Implementations;
 using Organizations.Models.Models;
 using Organizations.Services.Implementations;
 using Organizations.Services.Interfaces;
+using Organizations.Services.Statistics.Contracts;
+using Organizations.Services.Statistics.Implementations;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,11 +56,15 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IIndustryService, IndustryService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+// stat services
+builder.Services.AddScoped<ICountryStatisticService, CountryStatisticService>();
 // Db-related
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIndustryRepostiory, IndustryRepository>();
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+builder.Services.AddScoped<ICountryQuery, CountryQuery>();
 //
 
 //Account
