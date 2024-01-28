@@ -8,6 +8,7 @@ namespace Organizations.API.Mapper
     {
         public AutoMapperProfile() {
             CreateMap<Industry, IndustryDTO>().ReverseMap();
+            CreateMap<Organization, OrganizationResponse>().ReverseMap();
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.Models.DTO;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
 using System;
@@ -15,10 +17,12 @@ namespace Organizations.Services.Implementations
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IMemoryCache _memoryCache;
-        public OrganizationService(IOrganizationRepository organizationRepository, IMemoryCache memoryCache)
+        private readonly IMapper _mapper;
+        public OrganizationService(IOrganizationRepository organizationRepository, IMemoryCache memoryCache, IMapper mapper)
         {
             _organizationRepository = organizationRepository;
             _memoryCache = memoryCache;
+            _mapper = mapper;
         }
         public string GetPagedOrganizations(int page, int pageSize)
         {
@@ -28,20 +32,21 @@ namespace Organizations.Services.Implementations
             if (organizations != null)
             {
                 List<Organization> organizationsPaged = organizations.Skip(startIndex).Take(pageSize).ToList();
-                return JsonConvert.SerializeObject(organizationsPaged);
+                return JsonConvert.SerializeObject(_mapper.Map<List<OrganizationResponse>>(organizationsPaged));
             }
             else
             {
                 organizations = _organizationRepository.GetAll().ToList();
                 _memoryCache.Set("AllOrganizations", organizations, TimeSpan.FromMinutes(5));
                 List<Organization> organizationsPaged = organizations.Skip(startIndex).Take(pageSize).ToList();
-                return JsonConvert.SerializeObject(organizationsPaged);
+                return JsonConvert.SerializeObject(_mapper.Map<List<OrganizationResponse>>(organizationsPaged));
             }
         }
 
-        public Organization GetOrganizationById(string organizationId)
+        public OrganizationResponse GetOrganizationById(string organizationId)
         {
-            return _organizationRepository.GetById(organizationId);
+            return _mapper.Map<OrganizationResponse>(_organizationRepository.GetById(organizationId));
+            
         }
 
         public bool Delete(string organizationId)
