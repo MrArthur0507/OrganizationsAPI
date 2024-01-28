@@ -1,4 +1,5 @@
 ﻿using Organizations.DbProvider.Repositories.Contracts;
+using Organizations.Models.DTO;
 using Organizations.Models.Models;
 using Organizations.ReaderApp.Services.Contracts;
 using System;
@@ -22,7 +23,7 @@ namespace Organizations.ReaderApp.Services.Implementations
             _organizationRepository = organizationRepository;
         }
 
-        public void Seed(IList<Organization> organizations)
+        public void Seed(IList<OrganizationDTO> organizations)
         {
             HashSet<string> countries = organizations.Select(x => x.Country).Distinct().ToHashSet();
             HashSet<string> industries = organizations.Select(x => x.Industry).Distinct().ToHashSet();

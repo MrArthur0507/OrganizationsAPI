@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Organizations.Models.Models
+namespace Organizations.Models.DTO
 {
-    public class DBOrganization
+    public class OrganizationDTO
     {
         [Name("Index")]
         public string Index { get; set; }
@@ -22,7 +22,7 @@ namespace Organizations.Models.Models
         public string Website { get; set; }
 
         [Name("Country")]
-        public int CountryId { get; set; }
+        public string Country { get; set; }
 
         [Name("Description")]
         public string Description { get; set; }
@@ -31,7 +31,7 @@ namespace Organizations.Models.Models
         public int Founded { get; set; }
 
         [Name("Industry")]
-        public int IndustryId { get; set; }
+        public string Industry { get; set; }
 
         [Name("Number of employees")]
         public int NumberOfEmployees { get; set; }

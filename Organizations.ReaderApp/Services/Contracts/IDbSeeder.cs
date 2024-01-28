@@ -1,4 +1,4 @@
-﻿using Organizations.Models.Models;
+﻿using Organizations.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace Organizations.ReaderApp.Services.Contracts
 {
     public interface IDbSeeder
     {
-        public void Seed(IList<Organization> organizations);
+        public void Seed(IList<OrganizationDTO> organizations);
     }
 }

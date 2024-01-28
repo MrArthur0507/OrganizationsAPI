@@ -8,6 +8,6 @@ namespace Organizations.DbProvider.Base
 {
     public class BaseDbComponent
     {
-        protected readonly string DbFile = "C:\\Users\\mrart\\source\\repos\\OrganizationsManager\\Data\\mydb.db";
+        protected readonly string DbFile = "C:\\Users\\Bozhidar\\Desktop\\webapi2\\OrganizationsAPI\\Data\\mydb.db";
     }
 }

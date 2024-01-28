@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Organizations.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace Organizations.Services.Interfaces
 {
     public interface IOrganizationService
     {
+        public string GetPagedOrganizations(int page, int pageSize);
 
+        public Organization GetOrganizationById(string Organizationid);
+
+        public bool Delete(string OrganizationId);
     }
 }

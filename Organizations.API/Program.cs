@@ -47,10 +47,11 @@ builder.Services.AddSwaggerGen(opt =>
 //mapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
+builder.Services.AddMemoryCache();
 // services
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IIndustryService, IndustryService>();
-
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 // Db-related
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIndustryRepostiory, IndustryRepository>();

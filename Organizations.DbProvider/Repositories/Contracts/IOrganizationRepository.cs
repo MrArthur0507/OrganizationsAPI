@@ -1,4 +1,5 @@
-﻿using Organizations.Models.Models;
+﻿using Organizations.Models.DTO;
+using Organizations.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Organizations.DbProvider.Repositories.Contracts
 {
     public interface IOrganizationRepository : IGenericRepository<Organization>
     {
-        public void AddOrganizations(HashSet<Organization> organizations);
+        public void AddOrganizations(HashSet<OrganizationDTO> organizations);
     }
 }

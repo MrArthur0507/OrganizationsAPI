@@ -22,7 +22,7 @@ namespace Organizations.Models.Models
         public string Website { get; set; }
 
         [Name("Country")]
-        public string Country { get; set; }
+        public int CountryId { get; set; }
 
         [Name("Description")]
         public string Description { get; set; }
@@ -31,7 +31,7 @@ namespace Organizations.Models.Models
         public int Founded { get; set; }
 
         [Name("Industry")]
-        public string Industry { get; set; }
+        public int IndustryId { get; set; }
 
         [Name("Number of employees")]
         public int NumberOfEmployees { get; set; }

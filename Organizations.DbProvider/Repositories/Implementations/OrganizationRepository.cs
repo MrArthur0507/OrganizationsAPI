@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Organizations.DbProvider.Repositories.Contracts;
 using Organizations.DbProvider.Tools.Implementations;
+using Organizations.Models.DTO;
 using Organizations.Models.Models;
 using System;
 using System.Collections;
@@ -22,7 +23,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
             _industryRepository = industryRepository;
         }
 
-        public void AddOrganizations(HashSet<Organization> organizations)
+        public void AddOrganizations(HashSet<OrganizationDTO> organizations)
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
             {
@@ -38,11 +39,11 @@ namespace Organizations.DbProvider.Repositories.Implementations
                             ([Index], Name, Website, CountryId, Description, Founded, IndustryId, NumberOfEmployees) 
                             VALUES 
                             (@Index, @Name, @Website, @CountryId, @Description, @Founded, @IndustryId, @NumberOfEmployees);";
-                            
-                            command.CommandText = query;
-                            HashSet<DBOrganization> dBOrganization = AssignIdsToOrganizations(organizations);
 
-                            foreach (DBOrganization organization in dBOrganization)
+                            command.CommandText = query;
+                            HashSet<Organization> dBOrganization = AssignIdsToOrganizations(organizations);
+
+                            foreach (Organization organization in dBOrganization)
                             {
 
                                 command.Parameters.AddWithValue("@Index", organization.Index);
@@ -54,7 +55,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
                                 command.Parameters.AddWithValue("@IndustryId", organization.IndustryId);
                                 command.Parameters.AddWithValue("@NumberOfEmployees", organization.NumberOfEmployees);
                                 command.ExecuteNonQuery();
-                              
+
                                 command.Parameters.Clear();
                             }
                         }
@@ -68,18 +69,18 @@ namespace Organizations.DbProvider.Repositories.Implementations
                     }
 
                 }
-                
+
             }
         }
 
 
-        public HashSet<DBOrganization> AssignIdsToOrganizations(HashSet<Organization> organizations)
+        public HashSet<Organization> AssignIdsToOrganizations(HashSet<OrganizationDTO> organizations)
         {
-            HashSet<DBOrganization> organizationsWithIds = new HashSet<DBOrganization>();      
+            HashSet<Organization> organizationsWithIds = new HashSet<Organization>();
             HashSet<Industry> industries = _industryRepository.GetAll().ToHashSet();
             HashSet<Country> countries = _countryRepository.GetAll().ToHashSet();
 
-            foreach (Organization organization in organizations)
+            foreach (OrganizationDTO organization in organizations)
             {
                 Country country = countries.FirstOrDefault(c => c.Name == organization.Country);
                 Industry industry = industries.FirstOrDefault(c => c.Name == organization.Industry);
@@ -87,7 +88,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 int countryId = country.CountryId;
                 int industryId = industry.IndustryId;
 
-                organizationsWithIds.Add(new DBOrganization
+                organizationsWithIds.Add(new Organization
                 {
                     Index = organization.Index,
                     Name = organization.Name,
