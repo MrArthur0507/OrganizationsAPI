@@ -42,6 +42,10 @@ namespace Organizations.Services.Implementations
             }
         }
 
+        public bool UpdateIndustry(Industry industry)
+        {
+            return _industryRepository.UpdateIndustry(industry);
+        }
         public void AddIndustries(HashSet<Industry> industries)
         {
             foreach (var industry in industries)

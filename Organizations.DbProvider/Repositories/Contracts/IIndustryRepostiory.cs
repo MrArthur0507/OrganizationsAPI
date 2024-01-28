@@ -14,6 +14,7 @@ namespace Organizations.DbProvider.Repositories.Contracts
 
         public void AddIndustries(HashSet<Industry> industries);
 
+        public bool UpdateIndustry(Industry industry);
         public int GetIndustryIdByName(string name);
     }
 }

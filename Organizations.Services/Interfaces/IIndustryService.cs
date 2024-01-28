@@ -13,6 +13,8 @@ namespace Organizations.Services.Interfaces
         public int AddIndustry(Industry industry);
         public int GetIndustryIdByName(string name);
         public Industry GetIndustryById(string industryId);
+
+        public bool UpdateIndustry(Industry industry);
         public bool Delete(string industryId);
     }
 }

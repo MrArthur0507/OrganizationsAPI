@@ -67,6 +67,35 @@ namespace Organizations.DbProvider.Repositories.Implementations
             }
         }
 
+        public bool UpdateIndustry(Industry industry)
+        {
+            try
+            {
+                using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))
+                {
+                    connection.Open();
+                    string query = "UPDATE Industry SET Name = @Name WHERE IndustryId = @IndustryId;";
+
+                    using (SqliteCommand command = connection.CreateCommand())
+                    {
+                        command.CommandText = query;
+                        command.Parameters.AddWithValue("@IndustryId", industry.IndustryId);
+                        command.Parameters.AddWithValue("@Name", industry.Name);
+                        int changedRows = command.ExecuteNonQuery();
+                        if (changedRows > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            } catch(Exception ex)
+            {
+                return false;
+            }
+            return false;
+        }
+        
+
         public int GetIndustryIdByName(string name)
         {
             using (SqliteConnection connection = new SqliteConnection($"Data Source = {DbFile}"))

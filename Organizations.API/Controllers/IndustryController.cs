@@ -62,6 +62,21 @@ namespace Organizations.API.Controllers
             }
         }
         [Authorize("AdminPolicy")]
+        [HttpPut]
+        [Route("updateIndustry")]
+        public IActionResult UpdateIndustry([FromQuery]Industry industry)
+        {
+            bool isSuccess = _industryService.UpdateIndustry(industry);
+            if (isSuccess)
+            {
+                return Ok();
+            } else
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize("AdminPolicy")]
         [HttpDelete]
         [Route("deleteIndustry")]
         public ActionResult DeleteIndustry(string id)
