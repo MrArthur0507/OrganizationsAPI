@@ -27,6 +27,7 @@ namespace Organizations.DbProvider.Queries.Implementations
 
                 using (SqliteCommand command = connection.CreateCommand())
                 {
+                    command.CommandText = query; 
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())

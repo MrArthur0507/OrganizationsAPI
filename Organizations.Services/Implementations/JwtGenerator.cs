@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Organizations.Models.Models;
 using Organizations.Services.Interfaces;
 using System;
@@ -13,11 +15,16 @@ namespace Organizations.Services.Implementations
 {
     public class JwtGenerator : IJwtGenerator
     {
-
-        private readonly string secretKey = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5Nzg2OTYyMCwiaWF0IjoxNjk3ODY5NjIwfQ.yE7D6Lj12wX7qUYNTXVYqJhMdPsU7TA9C8WVG4mCCY4"; 
+        private readonly IConfiguration _configuration;
+        public JwtGenerator(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
 
         public string GenerateToken(Account account)
         {
+            string secretKey = _configuration.GetSection("Secret-Key").Value;
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
             string role = "User";

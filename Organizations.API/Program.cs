@@ -54,12 +54,15 @@ builder.Services.AddSingleton<IIpFilterService, IpFilterService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IPdfService, PdfService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 // services
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IIndustryService, IndustryService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 // stat services
 builder.Services.AddScoped<ICountryStatisticService, CountryStatisticService>();
+builder.Services.AddScoped<IIndustryStatisticService, IndustryStatisticService>();
 // Db-related
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIndustryRepostiory, IndustryRepository>();
@@ -67,6 +70,7 @@ builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddScoped<ICountryQuery, CountryQuery>();
+builder.Services.AddScoped<IIndustryQuery, IndustryQuery>();
 //
 
 //Account
@@ -94,7 +98,7 @@ builder.Services.AddAuthentication().AddJwtBearer(
             ValidateIssuer = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5Nzg2OTYyMCwiaWF0IjoxNjk3ODY5NjIwfQ.yE7D6Lj12wX7qUYNTXVYqJhMdPsU7TA9C8WVG4mCCY4"))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Secret-Key").Value))
         };
         
     });
