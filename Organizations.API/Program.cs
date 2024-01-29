@@ -1,17 +1,27 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Organizations.API.Jobs;
 using Organizations.API.Mapper;
 using Organizations.API.Middlewares;
 using Organizations.API.Services;
+using Organizations.DbProvider.Config.Contracts;
+using Organizations.DbProvider.Config.Implementations;
 using Organizations.DbProvider.Queries.Contracts;
 using Organizations.DbProvider.Queries.Implementations;
+using Organizations.DbProvider.Repositories;
 using Organizations.DbProvider.Repositories.Contracts;
 using Organizations.DbProvider.Repositories.Implementations;
+using Organizations.DbProvider.Services.Contracts;
+using Organizations.DbProvider.Services.Implementations;
+using Organizations.DbProvider.Tools.Contracts;
+using Organizations.DbProvider.Tools.Implementations;
 using Organizations.Models.Models;
 using Organizations.Services.Implementations;
 using Organizations.Services.Interfaces;
 using Organizations.Services.Statistics.Contracts;
 using Organizations.Services.Statistics.Implementations;
+using Organizations.Services.Utilities;
+using Quartz;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,12 +73,24 @@ builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 // stat services
 builder.Services.AddScoped<ICountryStatisticService, CountryStatisticService>();
 builder.Services.AddScoped<IIndustryStatisticService, IndustryStatisticService>();
+builder.Services.AddScoped<IDailyTotalService, DailyTotalService>();
+builder.Services.AddScoped<IDateGetter, DateGetter>();
+builder.Services.AddScoped<IOrganizationStatisticService, OrganizationStatisticService>();
 // Db-related
+
+builder.Services.AddSingleton<IConfigLoader, ConfigLoader>();
+builder.Services.AddSingleton<ITableCreationConfig, TableCreationConfig>();
+builder.Services.AddSingleton<IDbManager, SqliteDbManager>();
+builder.Services.AddSingleton<ITableManager, SqliteTableManager>();
+builder.Services.AddScoped<IOrganizationQuery, OrganizationQuery>();
+
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIndustryRepostiory, IndustryRepository>();
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
+builder.Services.AddScoped<ITotalCount, TotalCount>();
+builder.Services.AddScoped<IOrganizationIdAssigner, OrganizationIdAssigner>();
+builder.Services.AddSingleton<Organizations.DbProvider.Tools.Contracts.ILogger, SqliteLogger>();
 builder.Services.AddScoped<ICountryQuery, CountryQuery>();
 builder.Services.AddScoped<IIndustryQuery, IndustryQuery>();
 //
@@ -80,8 +102,23 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 //
 
-//jwt bearer
+//quartz jobs
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("DailyTotalJob");
+    q.AddJob<DailyTotalJob>(opts => opts.WithIdentity(jobKey));
 
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("DailyTotalJob-trigger")
+        .StartNow()
+        //.WithCronSchedule("0 0 0 * * ?"))
+        .WithCronSchedule("0/5 * * * * ?"));
+
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+//jwt and policies
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("AdminPolicy", policy =>
     {
@@ -105,6 +142,13 @@ builder.Services.AddAuthentication().AddJwtBearer(
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var dbInit = services.GetRequiredService<IDbManager>();
+    dbInit.LoadDb();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

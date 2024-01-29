@@ -87,9 +87,8 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
             }
         }
-
-            private T MapDataReaderToEntity(SqliteDataReader reader)
-            {
+        private T MapDataReaderToEntity(SqliteDataReader reader)
+        {
             T entity = Activator.CreateInstance<T>();
 
             for (int i = 0; i < reader.FieldCount; i++)
@@ -110,8 +109,8 @@ namespace Organizations.DbProvider.Repositories.Implementations
                     }
                 }
             }
-
             return entity;
         }
+
     }
 }

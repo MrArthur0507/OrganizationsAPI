@@ -11,7 +11,7 @@ namespace Organizations.DbProvider.Config.Implementations
 {
     public class ConfigLoader : IConfigLoader
     {
-        private readonly string filePath = "config.json";
+        private readonly string filePath = "C:\\Users\\Bozhidar\\Desktop\\webapi2\\OrganizationsAPI\\Config\\config.json";
         public ITableCreationConfig LoadConfig()
         {
             string jsonFile = GetJsonContentFromFile(filePath);

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Organizations.DbProvider.Services.Contracts
+namespace Organizations.Services.Utilities
 {
-    public interface IDbManager
+    public interface IDateGetter
     {
-        public void LoadDb();
+        public DateTime GetDate();
     }
 }

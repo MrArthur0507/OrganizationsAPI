@@ -17,7 +17,7 @@ namespace Organizations.API.Controllers
         }
 
         [HttpGet("pdfReport")]
-        public IActionResult ReturnStream()
+        public IActionResult DownloadReport()
         {
             var file = _reportService.GenerateReport();
             return File(file, "application/pdf", "report.pdf");

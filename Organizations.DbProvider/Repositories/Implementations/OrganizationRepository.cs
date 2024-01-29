@@ -15,12 +15,10 @@ namespace Organizations.DbProvider.Repositories.Implementations
 {
     public class OrganizationRepository : GenericRepository<Organization>, IOrganizationRepository
     {
-        private readonly ICountryRepository _countryRepository;
-        private readonly IIndustryRepostiory _industryRepository;
-        public OrganizationRepository(ICountryRepository countryRepository, IIndustryRepostiory industryRepository)
+        private readonly IOrganizationIdAssigner _organizationIdAssigner;
+        public OrganizationRepository(IOrganizationIdAssigner organizationIdAssigner)
         {
-            _countryRepository = countryRepository;
-            _industryRepository = industryRepository;
+            _organizationIdAssigner = organizationIdAssigner;
         }
 
         public void AddOrganizations(HashSet<OrganizationDTO> organizations)
@@ -41,7 +39,7 @@ namespace Organizations.DbProvider.Repositories.Implementations
                             (@Index, @Name, @Website, @CountryId, @Description, @Founded, @IndustryId, @NumberOfEmployees);";
 
                             command.CommandText = query;
-                            HashSet<Organization> dBOrganization = AssignIdsToOrganizations(organizations);
+                            HashSet<Organization> dBOrganization = _organizationIdAssigner.AssignIdsToOrganizations(organizations);
 
                             foreach (Organization organization in dBOrganization)
                             {
@@ -121,37 +119,6 @@ namespace Organizations.DbProvider.Repositories.Implementations
                 }
             }
             return false;
-        }
-
-
-        public HashSet<Organization> AssignIdsToOrganizations(HashSet<OrganizationDTO> organizations)
-        {
-            HashSet<Organization> organizationsWithIds = new HashSet<Organization>();
-            HashSet<Industry> industries = _industryRepository.GetAll().ToHashSet();
-            HashSet<Country> countries = _countryRepository.GetAll().ToHashSet();
-
-            foreach (OrganizationDTO organization in organizations)
-            {
-                Country country = countries.FirstOrDefault(c => c.Name == organization.Country);
-                Industry industry = industries.FirstOrDefault(c => c.Name == organization.Industry);
-
-                int countryId = country.CountryId;
-                int industryId = industry.IndustryId;
-
-                organizationsWithIds.Add(new Organization
-                {
-                    Index = organization.Index,
-                    Name = organization.Name,
-                    Website = organization.Website,
-                    CountryId = countryId,
-                    Description = organization.Description,
-                    Founded = organization.Founded,
-                    IndustryId = industryId,
-                    NumberOfEmployees = organization.NumberOfEmployees
-                });
-            }
-
-            return organizationsWithIds;
         }
     }
 }
