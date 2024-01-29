@@ -22,6 +22,7 @@ namespace Organizations.API.Controllers
 
         [HttpGet]
         [Route("getAll")]
+        [ResponseCache(Duration = 60)]
         public ActionResult<string> GetAll()
         {
             return _countryService.GetAll();

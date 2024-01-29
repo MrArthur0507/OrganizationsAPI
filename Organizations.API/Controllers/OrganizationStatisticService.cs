@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Organizations.Services.Statistics.Contracts;
 
@@ -13,6 +14,7 @@ namespace Organizations.API.Controllers
         {
             _organizationStatisticService = organizationStatisticService;
         }
+        [Authorize]
         [HttpGet]
         [Route("getOrganizationsByNumberOfEmployees")]
         public IActionResult GetTopOrganizations(int top)

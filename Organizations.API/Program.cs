@@ -59,6 +59,9 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
+
+//response caching
+builder.Services.AddResponseCaching();
 builder.Services.AddSingleton<IIpFilterService, IpFilterService>();
 //mapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -161,7 +164,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseMiddleware<IpFilterMiddleware>();
 app.UseMiddleware<CustomHeaderMiddleware>();
-
+app.UseResponseCaching();
 app.MapControllers();
 app.Run();
 

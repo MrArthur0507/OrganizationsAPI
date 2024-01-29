@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Tls;
 using Organizations.Services.Interfaces;
@@ -15,8 +16,9 @@ namespace Organizations.API.Controllers
         {
             _reportService = reportService;
         }
-
-        [HttpGet("pdfReport")]
+        [Authorize]
+        [HttpGet]
+        [Route("pdfReport")]
         public IActionResult DownloadReport()
         {
             var file = _reportService.GenerateReport();
